@@ -44,7 +44,7 @@
         <v-row>
           <v-text-field
               :value="shownsolution"
-              append-outer-icon="mdi-help"
+              :append-outer-icon="shownsolution === ''? 'mdi-help' : 'mdi-close'"
               label="Show solution"
               type="text"
               readonly
@@ -58,7 +58,7 @@
       <v-btn
           color="blue darken-2"
           text
-          @click="number = gennumber()"
+          @click="number = gennumber(); shownsolution = ''"
       >
         New Number
       </v-btn>
@@ -95,7 +95,11 @@ export default {
   },
   methods: {
     showSolution() {
-      this.shownsolution = this.solution(this.number);
+      if(this.shownsolution === ""){
+        this.shownsolution = this.solution(this.number);
+      }else{
+        this.shownsolution = "";
+      }
     },
     setClearHandler(handler) {
       this.clearinput = handler;
