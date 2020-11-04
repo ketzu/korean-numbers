@@ -27,12 +27,10 @@
     </v-app-bar>
 
     <v-main>
-      <v-container fluid>
+      <v-container fill-height fluid>
         <v-row justify="center" v-show="showSettings">
           <v-card
               class="mx-auto"
-              max-width="600"
-              min-width="400"
           >
             <v-card-title>
               Settings
@@ -41,7 +39,7 @@
             <v-card-text>
               <v-container fluid>
                 <v-switch v-model="translate" label="Translate input to Hangul."></v-switch>
-                <p>The keyboard layout used here is the <a href="https://en.wikipedia.org/wiki/Keyboard_layout#/media/File:KB_South_Korea.svg">Dubeolsik layout</a>.</p>
+                <p>The keyboard layout used here is the <a href="https://en.wikipedia.org/wiki/Keyboard_layout#/media/File:KB_South_Korea.svg">Dubeolsik layout</a>. Only works with desktop computers.</p>
                 <v-divider :inset="true" vertical></v-divider>
                 <v-switch v-model="ones" label="Ones (1,2,3,4,5,6,7,8,9)"></v-switch>
                 <v-switch v-model="tens" label="Tens (e.g. 10, 40, 90)"></v-switch>
@@ -55,7 +53,7 @@
             </v-card-text>
           </v-card>
         </v-row>
-        <v-row justify="center" v-show="!showSettings">
+        <v-row justify="center" align="center" v-show="!showSettings">
           <Challenge
               :translate="translate"
               :ones="ones"
@@ -94,7 +92,7 @@ export default {
     hundredthousands: false,
     millions: false,
     billion: false,
-    translate: true
+    translate: false
   }),
 };
 </script>

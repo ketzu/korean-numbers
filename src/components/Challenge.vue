@@ -1,22 +1,73 @@
 <template>
   <v-card
       class="mx-auto"
-      max-width="600"
-      min-width="400"
+      max-width="500"
   >
+    <v-card-title>
+      <span v-if="correct>0" class="pr-3">
+        <v-icon color="info">
+          mdi-thumb-up
+        </v-icon>
+        {{ correct }}
+      </span>
+      <span v-if="wrongs>0">
+        <v-icon color="error">
+          mdi-thumb-down
+        </v-icon>
+        {{ wrongs }}
+      </span>
+      <v-spacer></v-spacer>
+      <v-btn
+          color="blue darken-2"
+          icon
+          @click="number = gennumber(); shownsolution = ''"
+      >
+        <v-icon>
+          mdi-cached
+        </v-icon>
+      </v-btn>
+    </v-card-title>
     <v-snackbar
-        v-model="snackbar"
-        timeout="2000"
+        v-model="failbar"
+        timeout="1000"
         top
+        color="error"
+        vertical
+        min-width="0"
     >
-      {{ text }}
+      <v-icon color="white" size="110">
+        mdi-thumb-down
+      </v-icon>
 
       <template v-slot:action="{ attrs }">
         <v-btn
-            color="blue"
+            color="white"
             text
             v-bind="attrs"
-            @click="snackbar = false"
+            @click="failbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+    <v-snackbar
+        v-model="successbar"
+        timeout="1000"
+        top
+        color="info"
+        vertical
+        min-width="0"
+    >
+      <v-icon color="white" size="110">
+        mdi-thumb-up
+      </v-icon>
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+            color="white"
+            text
+            v-bind="attrs"
+            @click="successbar = false"
         >
           Close
         </v-btn>
@@ -25,7 +76,7 @@
     <v-card-text>
       <v-container>
         <v-row class="d-flex justify-center">
-            <span class="font-weight-bold text-center py-16" style="font-size:6rem;">
+            <span class="font-weight-bold text-center pb-16 pt-5" style="font-size:6rem;">
               {{ number }}
             </span>
         </v-row>
@@ -55,13 +106,6 @@
     </v-card-text>
 
     <v-card-actions>
-      <v-btn
-          color="blue darken-2"
-          text
-          @click="number = gennumber(); shownsolution = ''"
-      >
-        New Number
-      </v-btn>
       <v-spacer></v-spacer>
       <v-btn
           color="blue darken-2"
@@ -90,14 +134,17 @@ export default {
       clearinput: undefined,
       shownsolution: "",
       text: "",
-      snackbar: false
+      successbar: false,
+      failbar: false,
+      correct: 0,
+      wrongs: 0
     }
   },
   methods: {
     showSolution() {
-      if(this.shownsolution === ""){
+      if (this.shownsolution === "") {
         this.shownsolution = this.solution(this.number);
-      }else{
+      } else {
         this.shownsolution = "";
       }
     },
@@ -105,16 +152,23 @@ export default {
       this.clearinput = handler;
     },
     check() {
+      if (this.value === "")
+        return;
       if (this.value === this.solution(this.number)) {
         this.text = "Sucess!";
+        this.correct += 1;
         this.number = this.gennumber();
         this.shownsolution = "";
-        if (this.clearinput !== undefined)
+        if (this.clearinput !== undefined && this.translate) {
           this.clearinput();
-      }else{
-        this.text = "Not quite right.";
+        } else {
+          this.value = "";
+        }
+        this.successbar = true;
+      } else {
+        this.wrongs += 1;
+        this.failbar = true;
       }
-      this.snackbar = true;
     },
     solution(number) {
       const sino_ones = ['', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구'];

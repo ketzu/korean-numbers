@@ -7,6 +7,7 @@
       :outlined="outlined"
       :clearable="clearable"
       :value="text"
+      @input="oninput"
       v-on:keydown="keydownhandler"
       v-on:keyup="keyuphandler"
       v-on:keypress="keypresshandler"
@@ -29,10 +30,23 @@ export default {
   },
   computed: {
     text() {
-      return Hangul.assemble(this.hangullist);
+      if(this.translate) {
+        return Hangul.assemble(this.hangullist);
+      }else{
+        return this.value;
+      }
     }
   },
   methods: {
+    oninput(event){
+      if(!this.translate) {
+        if(typeof event === 'object' && event !== null) {
+          this.$emit('input', ...event);
+        }else {
+          this.$emit('input', event);
+        }
+      }
+    },
     clear() {
       this.hangullist.splice(0);
     },
@@ -79,7 +93,7 @@ export default {
           this.$emit('enter');
           break;
       }
-      if(!this.translate) {
+      if (!this.translate) {
         return;
       }
 
@@ -108,6 +122,12 @@ export default {
             break;
           case 'KeyP':
             this.insert('ㅖ', event.target);
+            break;
+
+          case 'Backspace':
+          case 'Delete':
+            event.preventDefault();
+            this.delete(event.code, event.target);
             break;
 
           default:
@@ -197,6 +217,12 @@ export default {
             this.insert('ㅡ', event.target);
             break;
 
+          case 'Backspace':
+          case 'Delete':
+            event.preventDefault();
+            this.delete(event.code, event.target);
+            break;
+
           case 'Enter':
           case 'NumpadEnter':
             this.$emit('enter');
@@ -210,7 +236,7 @@ export default {
       this.$emit('input', this.text);
     },
     keydownhandler(event) {
-      if(!this.translate) {
+      if (!this.translate) {
         return;
       }
 
@@ -223,7 +249,7 @@ export default {
       this.$emit('input', this.text);
     },
     keyuphandler(event) {
-      if(!this.translate) {
+      if (!this.translate) {
         return;
       }
 
