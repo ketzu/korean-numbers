@@ -172,7 +172,7 @@ export default {
     },
     solution(number) {
       const sino_ones = ['', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구'];
-      const sino_counts = ['', '십', '백', '천', '만', '십만', '백만', '천만', '일억', '십억'];
+      const sino_counts = ['', '십', '백', '천', '만', '십', '백', '천', '억', '십'];
       if (number === 0)
         return "영";
       let index = 0;
@@ -183,7 +183,7 @@ export default {
         if (one > 0) {
           solution = sino_counts[index] + solution;
         }
-        if ((index > 0 && one > 1) || index == 0) {
+        if ((index > 0 && one > 1) || index % 4 === 0) {
           solution = sino_ones[one] + solution;
         }
 
