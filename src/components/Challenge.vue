@@ -180,10 +180,10 @@ export default {
       while (number > 0) {
         const one = number % 10;
 
-        if (one > 0) {
+        if (one > 0 || index === 4 || index === 8) {
           solution = sino_counts[index] + solution;
         }
-        if ((index > 0 && one > 1) || index % 4 === 0) {
+        if ((index > 0 && one > 1) || index === 0) {
           solution = sino_ones[one] + solution;
         }
 
